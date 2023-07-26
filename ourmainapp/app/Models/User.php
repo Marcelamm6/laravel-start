@@ -24,8 +24,8 @@ class User extends Authenticatable
         'password',
     ];
 
-    protected function avatar(): Attribute{
-        return Attribute::make(get: function($value){
+    protected function avatar(): Attribute {
+        return Attribute::make(get: function($value) {
             return $value ? '/storage/avatars/' . $value : '/fallback-avatar.jpg';
         });
     }
@@ -47,10 +47,21 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'password' => 'hashed',
     ];
 
-    public function posts(){
+    public function feedPosts() {
+        return $this->hasManyThrough(Post::class, Follow::class, 'user_id', 'user_id', 'id', 'followeduser');
+    }
+
+    public function followers() {
+        return $this->hasMany(Follow::class, 'followeduser');
+    }
+
+    public function followingTheseUsers() {
+        return $this->hasMany(Follow::class, 'user_id');
+    }
+
+    public function posts() {
         return $this->hasMany(Post::class, 'user_id');
     }
 }
