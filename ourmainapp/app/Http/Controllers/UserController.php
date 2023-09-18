@@ -57,7 +57,7 @@ class UserController extends Controller
     }
 
     public function profileRaw(User $user) {
-        return response()->json(['theHTML' => view('profile-posts-only', ['posts' => $user->posts()->latest()->get()]), 'docTitle' => $user->username . "'s Profile"]);
+        return response()->json(['theHTML' => view('profile-posts-only', ['posts' => $user->posts()->latest()->get()])->render(), 'docTitle' => $user->username . "'s Profile"]);
     }
 
     public function profileFollowers(User $user) {
@@ -66,7 +66,7 @@ class UserController extends Controller
     }
 
     public function profileFollowersRaw(User $user) {
-        return response()->json(['theHTML' => view('profile-followers-only', ['followers' => $user->followers()->latest()->get()]), 'docTitle' => $user->username . "'s Followers"]);
+        return response()->json(['theHTML' => view('profile-followers-only', ['followers' => $user->followers()->latest()->get()])->render(), 'docTitle' => $user->username . "'s Followers"]);
     }
 
     public function profileFollowing(User $user) {
@@ -75,14 +75,13 @@ class UserController extends Controller
     }
 
     public function profileFollowingRaw(User $user) {
-        return response()->json(['theHTML' => view('profile-following-only', ['following' => $user->followingTheseUsers()->latest()->get()]), 'docTitle' => 'Who ' . $user->username . " Follows"]);
+        return response()->json(['theHTML' => view('profile-following-only', ['following' => $user->followingTheseUsers()->latest()->get()])->render(), 'docTitle' => 'Who ' . $user->username . " Follows"]);
     }
 
     public function logout() {
         event(new OurExampleEvent(['username' => auth()->user()->username, 'action' => 'logout']));
         auth()->logout();
-
-        return redirect('/')->with('success', 'You are now logged out.'); 
+        return redirect('/')->with('success', 'You are now logged out.');
     }
 
     public function showCorrectHomepage() {
